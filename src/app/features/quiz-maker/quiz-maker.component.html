@@ -6,9 +6,16 @@
       <td>
         <mat-form-field class="quiz-maker-full-width">
           <mat-label>Select a category</mat-label>
-          <mat-select [formControl]="categoryControl" required>
-            <mat-option *ngFor="let category of categories" [value]="category">
-              {{ category }}
+          <mat-select
+            required
+            id="categorySelect"
+            [formControl]="categoryControl"
+          >
+            <mat-option
+              *ngFor="let category of categories$ | async"
+              [value]="category.id"
+            >
+              {{ category.name }}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -16,21 +23,34 @@
       <td>
         <mat-form-field class="quiz-maker-full-width">
           <mat-label>Select difficulty</mat-label>
-          <mat-select [formControl]="difficultyControl" required>
+          <mat-select
+            required
+            id="difficultySelect"
+            [formControl]="difficultyControl"
+          >
             <mat-option
               *ngFor="let difficulty of difficulties"
-              [value]="difficulty"
+              [value]="difficulty.id"
             >
-              {{ difficulty }}
+              {{ difficulty.name }}
             </mat-option>
           </mat-select>
         </mat-form-field>
       </td>
       <td>
-        <button mat-raised-button color="primary">Create</button>
+        <button
+          id="createBtn"
+          mat-raised-button
+          color="primary"
+          (click)="createQuiz()"
+        >
+          Create
+        </button>
       </td>
     </tr>
   </table>
+
+  <pre>{{ quizData$ | async | json }}</pre>
 
   <button mat-raised-button color="accent" (click)="submitQuiz()">
     Submit

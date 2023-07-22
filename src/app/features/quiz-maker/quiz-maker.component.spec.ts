@@ -8,7 +8,7 @@ describe('QuizMakerComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [QuizMakerComponent]
+      declarations: [QuizMakerComponent],
     });
     fixture = TestBed.createComponent(QuizMakerComponent);
     component = fixture.componentInstance;

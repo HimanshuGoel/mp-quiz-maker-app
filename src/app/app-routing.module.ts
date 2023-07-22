@@ -1,10 +1,33 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { QuizMakerComponent } from './features/quiz-maker/quiz-maker.component';
+import { QuizResultsComponent } from './features/quiz-results/quiz-results.component';
 
-const routes: Routes = [];
+const routes: Routes = [
+  {
+    path: '',
+    redirectTo: 'quiz-maker',
+    pathMatch: 'full',
+  },
+  {
+    path: 'quiz-maker',
+    title: 'Quiz Maker',
+    component: QuizMakerComponent,
+  },
+  {
+    path: 'quiz-results',
+    title: 'Quiz Results',
+    component: QuizResultsComponent,
+  },
+  {
+    path: '**',
+    redirectTo: 'quiz-maker',
+    pathMatch: 'full',
+  },
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

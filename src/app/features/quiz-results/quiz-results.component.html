@@ -1,36 +1,35 @@
 <h1>Quiz Results</h1>
 
-<section *ngFor="let quiz of quizAttemptedData">
+<div *ngFor="let quiz of relatedQuestions">
   <p [innerHTML]="quiz.question"></p>
-  <section>
-    <div class="example-button-row">
-      <ng-container *ngFor="let option of quiz.options">
-        <button
-          *ngIf="option.isCorrect"
-          mat-flat-button
-          color="primary"
-          [innerHtml]="option.text"
-        ></button>
-        <button
-          *ngIf="!option.isCorrect && option.isSelected"
-          mat-flat-button
-          color="warn"
-          [innerHtml]="option.text"
-        ></button>
-        <button
-          *ngIf="!option.isCorrect && !option.isSelected"
-          mat-flat-button
-          [innerHtml]="option.text"
-        ></button>
-      </ng-container>
-    </div>
-  </section>
-</section>
 
-<div [class]="getClassToDisplay()">
-  You scored {{ totalScore }} out of {{ quizAttemptedData.length }}
+  <div class="quiz-result-button-row">
+    <ng-container *ngFor="let option of quiz.options">
+      <button
+        mat-flat-button
+        color="primary"
+        *ngIf="option.isCorrect"
+        [innerHtml]="option.text"
+      ></button>
+      <button
+        mat-flat-button
+        color="warn"
+        *ngIf="!option.isCorrect && option.isSelected"
+        [innerHtml]="option.text"
+      ></button>
+      <button
+        mat-flat-button
+        *ngIf="!option.isCorrect && !option.isSelected"
+        [innerHtml]="option.text"
+      ></button>
+    </ng-container>
+  </div>
 </div>
 
-<button mat-raised-button color="primary" (click)="createNewQuiz()">
+<div [class]="getClassToDisplay()">
+  You scored {{ totalScore }} out of {{ relatedQuestions.length }}
+</div>
+
+<button mat-raised-button color="primary" (click)="onCreateNewQuiz()">
   Create a new quiz
 </button>

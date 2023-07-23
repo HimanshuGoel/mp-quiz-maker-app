@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-
 import { Router } from '@angular/router';
-import { QuizMakerService } from '../quiz-maker/quiz-maker.service';
+
+import { DataShareService } from '../../core/data-share.service';
+import { IRelatedQuestion } from '../quiz-maker/related-question.interface';
 
 @Component({
   selector: 'app-quiz-results',
@@ -11,27 +12,19 @@ import { QuizMakerService } from '../quiz-maker/quiz-maker.service';
 export class QuizResultsComponent {
   constructor(
     private router: Router,
-    private quizMakerService: QuizMakerService
+    private dataShareService: DataShareService
   ) {}
 
-  quizAttemptedData: any;
   totalScore = 0;
+  relatedQuestions: IRelatedQuestion[] = [];
 
   ngOnInit() {
-    this.quizAttemptedData = this.quizMakerService.getQuizDataFromCache();
-
-    this.totalScore = 0;
-    this.quizAttemptedData.forEach((data: any) => {
-      const isRightlySelection = data.options.some(
-        (d: any) => d.isSelected === true && d.isCorrect === true
-      );
-      if (isRightlySelection) {
-        this.totalScore += 1;
-      }
-    });
+    this.relatedQuestions = this.dataShareService.getDataFromMemory();
+    this.calculateTotalScore();
   }
 
-  createNewQuiz() {
+  onCreateNewQuiz() {
+    this.dataShareService.clearDataFromMemory();
     this.router.navigate(['./quiz-maker']);
   }
 
@@ -43,5 +36,14 @@ export class QuizResultsComponent {
     } else {
       return 'high-score';
     }
+  }
+
+  private calculateTotalScore() {
+    this.totalScore = this.relatedQuestions.reduce((score, question) => {
+      const isQuestionCorrect = question.options.some(
+        (option) => option.isSelected && option.isCorrect
+      );
+      return score + (isQuestionCorrect ? 1 : 0);
+    }, 0);
   }
 }

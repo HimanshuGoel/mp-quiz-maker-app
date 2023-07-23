@@ -1,89 +1,112 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { QuizMakerService } from './quiz-maker.service';
-import { Observable, map } from 'rxjs';
+
+import { Observable, catchError, map, of } from 'rxjs';
+
+import { IQuestion, QuizMakerService } from './quiz-maker.service';
+import { IOption } from '../../common/option.interface';
+import {
+  IRelatedQuestion,
+  IRelatedQuestionOption,
+} from './related-question.interface';
+import { UtilityService } from '../../core/utility.service';
+import { DataShareService } from '../../core/data-share.service';
 
 @Component({
   selector: 'app-quiz-maker',
   templateUrl: './quiz-maker.component.html',
   styleUrls: ['./quiz-maker.component.scss'],
 })
-export class QuizMakerComponent {
-  categoryControl = new FormControl('', Validators.required);
-  difficultyControl = new FormControl('', Validators.required);
+export class QuizMakerComponent implements OnInit {
+  categoryControl = new FormControl<string>('', {
+    validators: Validators.required,
+    nonNullable: true,
+  });
+  difficultyControl = new FormControl<'easy' | 'medium' | 'hard'>('easy', {
+    validators: Validators.required,
+    nonNullable: true,
+  });
 
-  difficulties = [
-    { id: 'easy', name: 'Easy' },
-    { id: 'medium', name: 'Medium' },
-    { id: 'hard', name: 'Hard' },
-  ];
-  categories$: Observable<{ id: string; name: string }[]> | undefined;
-  quizData$!: Observable<any>;
+  difficultyOptions: IOption[] = [];
+
+  categoryOptions$: Observable<IOption[]> = of([]);
+  relatedQuestions$: Observable<IRelatedQuestion[]> = of([]);
 
   constructor(
     private router: Router,
-    private quizMakerService: QuizMakerService
+    private quizMakerService: QuizMakerService,
+    private dataShareService: DataShareService
   ) {}
 
   ngOnInit() {
-    this.categories$ = this.quizMakerService.getAllCategories$();
+    this.difficultyOptions = this.getDifficultyOptions();
+    this.categoryOptions$ = this.quizMakerService.getAllCategories$().pipe(
+      catchError((error) => {
+        console.error('Failed to fetch category options:', error);
+        return [];
+      })
+    );
   }
 
-  submitQuiz(data: any) {
-    this.quizMakerService.saveQuizDataInCache(data);
+  onSubmit(relatedQuestions: IRelatedQuestion[]) {
+    this.dataShareService.saveDataInMemory(relatedQuestions);
     this.router.navigate(['./quiz-results']);
   }
 
-  createQuiz() {
-    this.quizData$ = this.quizMakerService
-      .getAllQuizData$({
-        amount: 5,
-        category: this.categoryControl.value,
-        difficulty: this.difficultyControl.value,
-      })
+  onCreate() {
+    this.relatedQuestions$ = this.quizMakerService
+      .getAllQuestions$(
+        this.categoryControl.value,
+        this.difficultyControl.value
+      )
       .pipe(
-        map((data) => {
-          return data.map((d) => {
-            return {
-              question: d.question,
-              type: d.type,
-              options: this.shuffleArray([
-                {
-                  text: d.correct_answer,
-                  isCorrect: true,
-                  isSelected: false,
-                },
-                ...d.incorrect_answers.map((i) => ({
-                  text: i,
-                  isCorrect: false,
-                  isSelected: false,
-                })),
-              ]),
-            };
-          });
+        map((data) => this.mapToRelatedQuestions(data)),
+        catchError((error) => {
+          console.error('Failed to fetch related questions for quiz:', error);
+          return [];
         })
       );
   }
 
-  // Custom shuffle function using Fisher-Yates (Knuth) algorithm
-  shuffleArray<T>(array: T[]): T[] {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
+  onSelect(
+    relatedQuestion: IRelatedQuestion,
+    selectedOption: IRelatedQuestionOption
+  ) {
+    relatedQuestion.options.forEach(
+      (option) => (option.isSelected = option === selectedOption)
+    );
+  }
+
+  isVisible(relatedQuestions: IRelatedQuestion[]) {
+    if (relatedQuestions.length === 0) {
+      return false;
     }
-    return array;
-  }
 
-  onSelect(quiz: any, selectedOption: any) {
-    quiz.options.forEach(
-      (option: any) => (option.isSelected = option === selectedOption)
+    return relatedQuestions.every((relatedQuestion) =>
+      relatedQuestion.options.some((option) => option.isSelected)
     );
   }
 
-  isVisible(quiz: any) {
-    return quiz.every((q: any) =>
-      q.options.some((option: any) => option.isSelected)
-    );
+  private mapToRelatedQuestions(data: IQuestion[]): IRelatedQuestion[] {
+    return data.map((d) => ({
+      question: d.question,
+      options: UtilityService.shuffleArray([
+        { text: d.correct_answer, isCorrect: true, isSelected: false },
+        ...d.incorrect_answers.map((i) => ({
+          text: i,
+          isCorrect: false,
+          isSelected: false,
+        })),
+      ]),
+    }));
+  }
+
+  private getDifficultyOptions() {
+    return [
+      { id: 'easy', name: 'Easy' },
+      { id: 'medium', name: 'Medium' },
+      { id: 'hard', name: 'Hard' },
+    ];
   }
 }

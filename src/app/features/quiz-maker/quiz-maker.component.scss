@@ -8,19 +8,19 @@
   width: 100%;
 }
 
-td {
-  padding-right: 8px;
-}
-
-.example-button-row {
+.quiz-maker-button-row {
   display: table-cell;
   max-width: 600px;
 }
 
-section {
-  display: table;
+.quiz-maker-button-row .mat-mdc-button-base {
+  margin: 8px 8px 8px 0;
 }
 
-.example-button-row .mat-mdc-button-base {
-  margin: 8px 8px 8px 0;
+td {
+  padding-right: 8px;
+}
+
+section {
+  display: table;
 }

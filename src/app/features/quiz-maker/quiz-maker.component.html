@@ -12,7 +12,7 @@
             [formControl]="categoryControl"
           >
             <mat-option
-              *ngFor="let category of categories$ | async"
+              *ngFor="let category of categoryOptions$ | async"
               [value]="category.id"
             >
               {{ category.name }}
@@ -32,7 +32,7 @@
             [formControl]="difficultyControl"
           >
             <mat-option
-              *ngFor="let difficulty of difficulties"
+              *ngFor="let difficulty of difficultyOptions"
               [value]="difficulty.id"
             >
               {{ difficulty.name }}
@@ -48,7 +48,7 @@
           id="createBtn"
           mat-stroked-button
           color="primary"
-          (click)="createQuiz()"
+          (click)="onCreate()"
           [disabled]="categoryControl.invalid || difficultyControl.invalid"
         >
           Create
@@ -57,16 +57,16 @@
     </tr>
   </table>
 
-  <ng-container *ngIf="quizData$ | async as quizData">
-    <section *ngFor="let quiz of quizData">
-      <p [innerHTML]="quiz.question"></p>
+  <ng-container *ngIf="relatedQuestions$ | async as relatedQuestions">
+    <section *ngFor="let relatedQuestion of relatedQuestions">
+      <p [innerHTML]="relatedQuestion.question"></p>
       <section>
-        <div class="example-button-row">
+        <div class="quiz-maker-button-row">
           <button
-            *ngFor="let option of quiz.options"
+            *ngFor="let option of relatedQuestion.options"
             mat-flat-button
             [color]="option.isSelected ? 'primary' : null"
-            (click)="onSelect(quiz, option)"
+            (click)="onSelect(relatedQuestion, option)"
             [innerHtml]="option.text"
           ></button>
         </div>
@@ -76,8 +76,8 @@
     <button
       mat-raised-button
       color="primary"
-      (click)="submitQuiz(quizData)"
-      *ngIf="isVisible(quizData)"
+      (click)="onSubmit(relatedQuestions)"
+      *ngIf="isVisible(relatedQuestions)"
     >
       Submit
     </button>

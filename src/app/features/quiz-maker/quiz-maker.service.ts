@@ -1,60 +1,48 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+
 import { Observable, map } from 'rxjs';
+import { IOption } from '../../common/option.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class QuizMakerService {
-  private categoriesUrl = `https://opentdb.com/api_category.php`;
-  private quizDataUrl = `https://opentdb.com/api.php`;
-
-  quizData: any[] = [];
+  private quizUrl = 'https://opentdb.com';
 
   constructor(private http: HttpClient) {}
 
-  getAllCategories$(): Observable<{ id: string; name: string }[]> {
+  getAllCategories$(): Observable<IOption[]> {
     return this.http
-      .get<ICategory>(this.categoriesUrl)
+      .get<ICategoryData>(`${this.quizUrl}/api_category.php`)
       .pipe(map((data) => data.trivia_categories || []));
   }
 
-  getAllQuizData$(queryParams: any): Observable<
-    {
-      category: string;
-      correct_answer: string;
-      difficulty: 'easy' | 'medium' | 'hard';
-      incorrect_answers: string[];
-      question: string;
-      type: string;
-    }[]
-  > {
+  getAllQuestions$(
+    category: string,
+    difficulty: 'easy' | 'medium' | 'hard',
+    amount = 5
+  ): Observable<IQuestion[]> {
+    const params = new HttpParams({
+      fromObject: { category, difficulty, amount },
+    });
     return this.http
-      .get<IQuizData>(this.quizDataUrl, { params: queryParams })
+      .get<IQuestionData>(`${this.quizUrl}/api.php`, { params })
       .pipe(map((data) => data.results || []));
-  }
-
-  saveQuizDataInCache(data: any) {
-    this.quizData = data;
-  }
-
-  getQuizDataFromCache() {
-    return this.quizData;
   }
 }
 
-interface ICategory {
+interface ICategoryData {
   trivia_categories: { id: string; name: string }[];
 }
 
-interface IQuizData {
+interface IQuestionData {
   response_code: number;
-  results: {
-    category: string;
-    correct_answer: string;
-    difficulty: 'easy' | 'medium' | 'hard';
-    incorrect_answers: string[];
-    question: string;
-    type: string;
-  }[];
+  results: IQuestion[];
+}
+
+export interface IQuestion {
+  question: string;
+  correct_answer: string;
+  incorrect_answers: string[];
 }

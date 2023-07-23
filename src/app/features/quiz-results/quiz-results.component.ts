@@ -2,7 +2,10 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { DataShareService } from '../../core/data-share.service';
-import { IRelatedQuestion } from '../quiz-maker/related-question.interface';
+import {
+  IRelatedQuestion,
+  IRelatedQuestionOption,
+} from '../quiz-maker/related-question.interface';
 
 @Component({
   selector: 'app-quiz-results',
@@ -26,6 +29,16 @@ export class QuizResultsComponent {
   onCreateNewQuiz() {
     this.dataShareService.clearDataFromMemory();
     this.router.navigate(['./quiz-maker']);
+  }
+
+  getQuestionButtonClass(option: IRelatedQuestionOption) {
+    if (option.isCorrect) {
+      return 'correct-option';
+    } else if (!option.isCorrect && option.isSelected) {
+      return 'incorrect-selected-option';
+    } else {
+      return null;
+    }
   }
 
   getClassToDisplay() {

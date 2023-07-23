@@ -1,35 +1,33 @@
 <h1>Quiz Results</h1>
 
 <div *ngFor="let quiz of relatedQuestions">
-  <p [innerHTML]="quiz.question"></p>
+  <strong [innerHTML]="quiz.question"></strong>
 
   <div class="quiz-result-button-row">
     <ng-container *ngFor="let option of quiz.options">
       <button
-        mat-flat-button
-        color="primary"
-        *ngIf="option.isCorrect"
+        mat-stroked-button
         [innerHtml]="option.text"
-      ></button>
-      <button
-        mat-flat-button
-        color="warn"
-        *ngIf="!option.isCorrect && option.isSelected"
-        [innerHtml]="option.text"
-      ></button>
-      <button
-        mat-flat-button
-        *ngIf="!option.isCorrect && !option.isSelected"
-        [innerHtml]="option.text"
+        [ngClass]="getQuestionButtonClass(option)"
       ></button>
     </ng-container>
   </div>
+  <br />
 </div>
 
-<div [class]="getClassToDisplay()">
-  You scored {{ totalScore }} out of {{ relatedQuestions.length }}
+<div class="total-score" [class]="getClassToDisplay()">
+  <strong
+    >You scored {{ totalScore }} out of {{ relatedQuestions.length }}</strong
+  >
 </div>
 
-<button mat-raised-button color="primary" (click)="onCreateNewQuiz()">
+<br />
+
+<button
+  mat-raised-button
+  color="primary"
+  class="btn-create-new-quiz"
+  (click)="onCreateNewQuiz()"
+>
   Create a new quiz
 </button>

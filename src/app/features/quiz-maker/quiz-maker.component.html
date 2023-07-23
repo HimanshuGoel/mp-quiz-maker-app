@@ -60,7 +60,7 @@
 
 <ng-container *ngIf="relatedQuestions$ | async as relatedQuestions">
   <section *ngFor="let relatedQuestion of relatedQuestions">
-    <p [innerHTML]="relatedQuestion.question"></p>
+    <strong [innerHTML]="relatedQuestion.question"></strong>
     <section>
       <div class="quiz-maker-button-row">
         <button
@@ -72,6 +72,7 @@
         ></button>
       </div>
     </section>
+    <br />
   </section>
 
   <br />

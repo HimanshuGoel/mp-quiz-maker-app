@@ -13,3 +13,20 @@
 .high-score {
   background-color: green;
 }
+
+.correct-option {
+  background-color: lightgreen;
+}
+
+.incorrect-selected-option {
+  background-color: lightcoral;
+}
+
+.total-score {
+  text-align: center;
+  width: 500px;
+}
+
+.btn-create-new-quiz {
+  width: 500px;
+}

@@ -19,12 +19,12 @@ This application has been deployed on two cloud environments -
 
 ### Image 1
 
-![image1](./src/assets/image1.png)
+![image1](src/assets/image1.png)
 
 ### Image 2
 
-![image2](./src/assets/image2.png)
+![image2](src/assets/image2.png)
 
 ### Image 3
 
-![image3](./src/assets/image3.png)
+![image3](src/assets/image3.png)

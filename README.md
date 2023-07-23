@@ -1,27 +1,30 @@
-# MpQuizMakerApp
+# Mini Project Quiz Maker App
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.1.1.
+This application has been created with Angular 16 version for the evaluation of Angular Certificate Level 2.
+
+Please refer this original mini-project document for more details - <https://bit.ly/at-cert-l2-quiz>
 
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Run `npm run start` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-## Code scaffolding
+## Deployment server
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+This application has been deployed on two cloud environments -
 
-## Build
+- Firebase - <https://mp-quiz-maker-app.web.app/>
+- Github Pages - <https://himanshugoel.github.io/mp-quiz-maker-app>
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Snapshots
 
-## Running unit tests
+### Image 1
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+![image1](./src/assets/image1.png)
 
-## Running end-to-end tests
+### Image 2
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+![image2](./src/assets/image2.png)
 
-## Further help
+### Image 3
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+![image3](./src/assets/image3.png)

@@ -11,12 +11,12 @@ const routes: Routes = [
   },
   {
     path: 'quiz-maker',
-    title: 'Quiz Maker',
+    title: 'Quiz Maker Page',
     component: QuizMakerComponent,
   },
   {
     path: 'quiz-results',
-    title: 'Quiz Results',
+    title: 'Quiz Results Page',
     component: QuizResultsComponent,
   },
   {

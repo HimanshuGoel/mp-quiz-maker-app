@@ -10,7 +10,6 @@
 
 .quiz-maker-button-row {
   display: table-cell;
-  max-width: 600px;
 }
 
 .quiz-maker-button-row .mat-mdc-button-base {
@@ -23,4 +22,12 @@ td {
 
 section {
   display: table;
+}
+
+.question-selected {
+  background-color: lightgreen;
+}
+
+.btn-submit-quiz {
+  width: 500px;
 }

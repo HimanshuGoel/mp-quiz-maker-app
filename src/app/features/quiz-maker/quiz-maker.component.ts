@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 
 import { Observable, catchError, map, of } from 'rxjs';
 
-import { IQuestion, QuizMakerService } from './quiz-maker.service';
+import { IQuestion, QuizMakerService, difficulty } from './quiz-maker.service';
 import { IOption } from '../../common/option.interface';
 import {
   IRelatedQuestion,
@@ -23,7 +23,7 @@ export class QuizMakerComponent implements OnInit {
     validators: Validators.required,
     nonNullable: true,
   });
-  difficultyControl = new FormControl<'easy' | 'medium' | 'hard'>('easy', {
+  difficultyControl = new FormControl<difficulty>('easy', {
     validators: Validators.required,
     nonNullable: true,
   });

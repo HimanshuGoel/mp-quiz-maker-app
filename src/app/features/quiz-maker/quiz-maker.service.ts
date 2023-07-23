@@ -20,7 +20,7 @@ export class QuizMakerService {
 
   getAllQuestions$(
     category: string,
-    difficulty: 'easy' | 'medium' | 'hard',
+    difficulty: difficulty,
     amount = 5
   ): Observable<IQuestion[]> {
     const params = new HttpParams({
@@ -46,3 +46,5 @@ export interface IQuestion {
   correct_answer: string;
   incorrect_answers: string[];
 }
+
+export type difficulty = 'easy' | 'medium' | 'hard';

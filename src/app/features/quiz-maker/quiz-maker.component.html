@@ -56,30 +56,33 @@
       </td>
     </tr>
   </table>
-
-  <ng-container *ngIf="relatedQuestions$ | async as relatedQuestions">
-    <section *ngFor="let relatedQuestion of relatedQuestions">
-      <p [innerHTML]="relatedQuestion.question"></p>
-      <section>
-        <div class="quiz-maker-button-row">
-          <button
-            *ngFor="let option of relatedQuestion.options"
-            mat-flat-button
-            [color]="option.isSelected ? 'primary' : null"
-            (click)="onSelect(relatedQuestion, option)"
-            [innerHtml]="option.text"
-          ></button>
-        </div>
-      </section>
-    </section>
-
-    <button
-      mat-raised-button
-      color="primary"
-      (click)="onSubmit(relatedQuestions)"
-      *ngIf="isVisible(relatedQuestions)"
-    >
-      Submit
-    </button>
-  </ng-container>
 </form>
+
+<ng-container *ngIf="relatedQuestions$ | async as relatedQuestions">
+  <section *ngFor="let relatedQuestion of relatedQuestions">
+    <p [innerHTML]="relatedQuestion.question"></p>
+    <section>
+      <div class="quiz-maker-button-row">
+        <button
+          *ngFor="let option of relatedQuestion.options"
+          mat-stroked-button
+          [ngClass]="option.isSelected ? 'question-selected' : null"
+          [innerHtml]="option.text"
+          (click)="onSelect(relatedQuestion, option)"
+        ></button>
+      </div>
+    </section>
+  </section>
+
+  <br />
+
+  <button
+    color="primary"
+    class="btn-submit-quiz"
+    mat-raised-button
+    *ngIf="isVisible(relatedQuestions)"
+    (click)="onSubmit(relatedQuestions)"
+  >
+    Submit
+  </button>
+</ng-container>

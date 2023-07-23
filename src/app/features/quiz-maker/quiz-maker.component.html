@@ -4,7 +4,7 @@
   <table class="quiz-maker-full-width">
     <tr>
       <td>
-        <mat-form-field class="quiz-maker-full-width">
+        <mat-form-field class="quiz-maker-full-width" appearance="outline">
           <mat-label>Select a category</mat-label>
           <mat-select
             required
@@ -18,10 +18,13 @@
               {{ category.name }}
             </mat-option>
           </mat-select>
+          <mat-error *ngIf="categoryControl.hasError('required')">
+            Category is <strong>required</strong>
+          </mat-error>
         </mat-form-field>
       </td>
       <td>
-        <mat-form-field class="quiz-maker-full-width">
+        <mat-form-field class="quiz-maker-full-width" appearance="outline">
           <mat-label>Select difficulty</mat-label>
           <mat-select
             required
@@ -35,14 +38,18 @@
               {{ difficulty.name }}
             </mat-option>
           </mat-select>
+          <mat-error *ngIf="difficultyControl.hasError('required')">
+            Difficulty is <strong>required</strong>
+          </mat-error>
         </mat-form-field>
       </td>
       <td>
         <button
           id="createBtn"
-          mat-raised-button
+          mat-stroked-button
           color="primary"
           (click)="createQuiz()"
+          [disabled]="categoryControl.invalid || difficultyControl.invalid"
         >
           Create
         </button>
@@ -50,9 +57,29 @@
     </tr>
   </table>
 
-  <pre>{{ quizData$ | async | json }}</pre>
+  <ng-container *ngIf="quizData$ | async as quizData">
+    <section *ngFor="let quiz of quizData">
+      <p [innerHTML]="quiz.question"></p>
+      <section>
+        <div class="example-button-row">
+          <button
+            *ngFor="let option of quiz.options"
+            mat-flat-button
+            [color]="option.isSelected ? 'primary' : null"
+            (click)="onSelect(quiz, option)"
+            [innerHtml]="option.text"
+          ></button>
+        </div>
+      </section>
+    </section>
 
-  <button mat-raised-button color="accent" (click)="submitQuiz()">
-    Submit
-  </button>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="submitQuiz(quizData)"
+      *ngIf="isVisible(quizData)"
+    >
+      Submit
+    </button>
+  </ng-container>
 </form>
